@@ -1,0 +1,27 @@
+{
+  "name": "ChatCAT",
+  "description": "",
+  "main": "index.js",
+  "authors": [
+    "ENNAJI ELmahfoud"
+  ],
+  "license": "ISC",
+  "moduleType": [],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "views/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angucomplete-alt": "^2.4.1",
+    "angular-material": "^1.0.9",
+    "angular-sanitize": "^1.5.7",
+    "angular-ui-router": "^0.3.1",
+    "angular-resource": "^1.5.7",
+    "angular-socket-io": "^0.7.0"
+  }
+}

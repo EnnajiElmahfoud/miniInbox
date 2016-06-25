@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html ng-app="mini">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>MiniINBOX CHAT </title>
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="bower_components/angular-mass-autocomplete/massautocomplete.theme.css" rel="stylesheet" type="text/css">
+<script src="bower_components/angular/angular.js"></script>
+ <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="bower_components/angular-socket-io/socket.js"></script>
+
+    <script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.js"></script>
+    <script src="bower_components/angular-mass-autocomplete/massautocomplete.js"></script>
+ <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+ <script src="scripts/app.js"></script> 
+
+  
+
+</head>
+<body ng-controller="HomeController">
+<div style="font-family:Verdana">
+  <div class="container">
+
+            
+ 
+<div class="row " style="padding-top:40px;">
+    <h3 class="text-center" >miniInbox app </h3>
+    <br />  <br />
+
+   <div class="ac-container" style="position:absolute;">
+      <ul class="ac-menu">
+      <li ng-repeat="result in results"
+      ng-if="$index > 0"
+      class="ac-menu-item"
+      ng-class="$index == selected_index ? 'ac-state-focus' : ''">
+      <a href ng-click="apply_selection($index, $event)" ng-bind-html=result.label> </a>
+    </li>
+  </ul>
+</div>
+    </div>
+  </div>
+</div>
+ 
+ <!-- ========================================================= -->
+ <div style="margin-top:1em">
+<div class="container">
+<div class="row">
+<div class="col-sm-12 col-xs-12">
+  <div class="panel panel-default">
+
+  <div class="panel-body">
+  <div class="row"> 
+  <div class="col-sm-12 col-xs-12" style="background-color:#C3E7F0"><img src="{{user.profilePic}}" width="50px" height="50px">&nbsp; {{user.fullname}}&nbsp;|&nbsp; &nbsp; &nbsp; <a href="/logout">Logout</a>&nbsp;&nbsp; <a href=""></a></div>
+
+  <div class="auto">
+      <div mass-autocomplete >
+          <input type="text" placeholder="Search for friends" class="form-control" ng-model="dirty.value" mass-autocomplete-item="ac_options_users">
+                 </div>
+                    
+  </div>
+
+  </div>
+  <br>
+<div class="row ">
+    <div class="col-md-8">
+        <div class="panel panel-info">
+            <div class="panel-heading" style="font-size: large;font-weight: bold;">
+               {{titlechat}}
+            </div>
+            <div class="panel-body">
+<ul class="media-list" id="messages" name="messages" style="width: 600px; height: 200px; overflow: auto">
+                 <li class="media" ng-repeat="one in commingMessage[profileID]">
+          <div class="media-body">
+         <div class="media">
+         <a class="pull-left" href="#">'
+          <img class="media-object img-circle " src="{{one.userpic}}" />
+          <!-- {{one.pic}} -->
+           </a>
+          <div class="media-body" >
+        {{one.message}}
+           <br />
+            <hr />
+              </div>
+             </div>
+           </div>
+         </li>
+
+
+
+                                </ul>
+            </div>
+            <div class="panel-footer">
+                <div class="input-group">
+                                    <input type="text" ng-model="entreMessage" id="newmessage" ng-enter="sendMessage(entreMessage)"= name="newmessage" class="form-control" placeholder="Enter Message" />
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-info" id="pressedbyuser" name="pressedbyuser" type="button" ng-click="sendMessage()">SEND</button>
+                                    </span>
+                                </div>
+            </div>
+        </div>
+    </div>
+    <!-- class="col-md-4" -->
+    <div class="col-md-4">
+          <div class="panel panel-primary" style="width: 300px; height: 200px;">
+            <div class="panel-heading" class="col-md-4">
+               Oline USERS
+            </div>
+            <div class="panel-body"> 
+                
+                <ul class="media-list" id="activeUsers" name="activeUsers">
+                 <div style="width: 600px; height: 200px; overflow: auto">
+                 <li class="media" ng-repeat="(key,value) in Onlineuser">
+                 <div class="media-body">
+                 <div class="media">
+                 <a >
+                 <a class="pull-left" href="#" ng-click="clickuser(key)">
+                 <img class="media-object img-circle" style="max-height:40px;" src="{{Onlineuser[key]['user']['profilePic']}}" />                 
+                 </a>
+                  <div class="media-body" >
+                 <h5>{{Onlineuser[key]['user']['fullname']}}</h5>
+                 </div>
+                 </a>
+                   </li>
+                 </div>
+                </ul>
+                </div>
+            </div>
+        
+    </div>
+</div>
+ </div>
+  <div class="panel-footer">Created By <a href="https://ma.linkedin.com/in/elmahfoud-ennaji-1715b0ab">ENNAJI ELmahfoud</a></div>
+  </div>
+  
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>
