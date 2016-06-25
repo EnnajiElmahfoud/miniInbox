@@ -45,7 +45,7 @@ module.exports = function(io) {
         // when the user disconnects.. perform this
         socket.on('disconnect', function() {
             // remove the username from global usernames list
-            delete usernames[socket.username];
+            delete usernames[socket.username.profileID];
             // update list of users in chat, client-side
             io.sockets.emit('updateusers', usernames);
             // echo globally that this client has left

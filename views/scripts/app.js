@@ -3,7 +3,7 @@
 (function() {
 
     angular
-        .module('mini', ['ui.router', 'ngSanitize', 'MassAutoComplete', 'ngResource', 'btford.socket-io'])
+        .module('mini', ['MassAutoComplete', 'ngResource', 'btford.socket-io'])
         .service('LoginService', ['$resource', loginservice])
         .controller('mainController', mainController)
         .controller('HomeController', HomeController)
@@ -23,11 +23,7 @@
 
     // ===============================================
     function HomeController($scope, $http, $rootScope, $timeout, $q, LoginService, $sce, io) {
-
-        $scope.result1 = '';
-        $scope.options1 = null;
-        $scope.details1 = '';
-
+        
         var socket = io.connect('http://localhost:3003/');
         LoginService.get(function(RES) {
                 console.log(RES);
@@ -40,20 +36,19 @@
                 socket.on('connect', function() {
 
                     console.log("connection established")
-                        // when the client emits 'sendchat', this listens and executes
-
-                    // when the client emits 'adduser', this listens and executes
                     socket.emit('adduser', RES.user)
+
+                    $scope.logout=function(){
+                        socket.emit('disconnect')
+                    }
 
                     socket.on('updatechat', function(userID, id) {
 
                     });
                     socket.on('store_userID', function(userID) {
-                        console.log('store_userID', userID)
                     })
 
                     socket.on('msg_user_found', function(val) {
-                        console.log("val", val);
                         if (val != '' && $scope.entreMessage != '') {
                             if ($scope.commingMessage[val]) {
                                 socket.emit('msg_user', val, RES.user.profileID, {
@@ -65,10 +60,8 @@
                                     message: $scope.entreMessage,
                                     userpic: RES.user.profilePic
                                 });
-                                console.log($scope.commingMessage);
                                 $scope.entreMessage = '';
                                 if (!$scope.$$phase) {
-                                    //$digest or $apply
                                     $scope.$apply()
                                 }
 
@@ -83,10 +76,8 @@
                                     message: $scope.entreMessage,
                                     userpic: RES.user.profilePic
                                 });
-                                console.log($scope.commingMessage);
                                 $scope.entreMessage = '';
                                 if (!$scope.$$phase) {
-                                    //$digest or $apply
                                     $scope.$apply()
                                 }
 
@@ -97,16 +88,13 @@
                     })
 
                     socket.on('msg_user_handle', function(userID, msg) {
-                        // console.log(userID, msg);
                         if ($scope.commingMessage[userID]) {
                             $scope.commingMessage[userID].push({
                                 pic: userID,
                                 message: msg.message,
                                 userpic: msg.userpic
                             });
-                            console.log($scope.commingMessage);
                             if (!$scope.$$phase) {
-                                //$digest or $apply
                                 $scope.$apply()
                             }
                         } else {
@@ -116,14 +104,13 @@
                                 message: msg.message,
                                 userpic: msg.userpic
                             });
-                            console.log($scope.commingMessage);
                             if (!$scope.$$phase) {
-                                //$digest or $apply
                                 $scope.$apply()
                             }
                         }
                     })
                     socket.on('updateusers', function(usr) {
+                        $scope.autolist=[];
                         for (var id in usr) {
                             $scope.autolist.push({
                                     name: usr[id]['user']['fullname'],
@@ -131,39 +118,27 @@
                                     userPic: usr[id]['user']['profilePic'],
                                     socketID: usr[id]['socketID'],
                                 })
-                                // $scope.$apply()
                         }
-
                         $scope.Onlineuser = usr;
-                        // for(key )
                         $scope.$apply()
-                        console.log("$scope.Onlineuser", $scope.Onlineuser);
-                        console.log($scope.autolist)
                     })
 
                     $scope.clickuser = function(key) {
                             $scope.titlechat = $scope.Onlineuser[key]['user']['fullname']
                             $scope.profileID = key;
                             if (!$scope.$$phase) {
-                                //$digest or $apply
                                 $scope.$apply()
                             }
 
                         }
-                        // when the user sends a private msg to a user id, first find the userID
                     $scope.check_user = function() {
                             if ($scope.profileID != '' && $scope.Onlineuser[$scope.profileID]) {
                                 socket.emit('check_user', RES.user.profileID, $scope.Onlineuser[$scope.profileID]['socketID'])
                             }
                         }
-                        // when the user sends a private message to a user.. perform this
-                        // $scope.msg_user = function(friend) {
-                        //     socket.emit('msg_user', RES.user.fullname, friend.fullname, msg)
-                        // }
+                        
 
                     $scope.sendMessage = function(msg) {
-                        console.log($scope.Onlineuser[$scope.profileID])
-                        console.log(msg);
                         if (msg != '') {
                             $scope.check_user()
                         }
@@ -184,7 +159,6 @@
         function suggest_users(term) {
             var q = term.toLowerCase().trim(),
                 results = [];
-            // console.log($scope.autolist)
             if ($scope.autolist.length != 0) {
                 for (var i = 0; i < $scope.autolist.length; i++) {
                     var user = $scope.autolist[i];
@@ -211,10 +185,8 @@
                 }
                 $scope.results = results;
                 if (!$scope.$$phase) {
-                    //$digest or $apply
                     $scope.$apply()
                 }
-                console.log($scope.results)
                 return results;
 
             }
@@ -222,8 +194,6 @@
         $scope.ac_options_users = {
             suggest: suggest_users,
             on_select: function(selected) {
-                console.log(selected);
-                // console.log($scope.Onlineuser[$scope.profileID])
                 $scope.clickuser(selected.obj.profileID)
             }
         };
@@ -240,11 +210,6 @@
 
 
     function iofactory(socketFactory) {
-        // var myIoSocket = io.connect('http://localhost:3003/roomlist');
-
-        // var socket = socketFactory({
-        //     ioSocket: myIoSocket
-        // });
 
         return io;
     }

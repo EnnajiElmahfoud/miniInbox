@@ -32,18 +32,6 @@
  
 <div class="row " style="padding-top:40px;">
     <h3 class="text-center" >miniInbox app </h3>
-    <br />  <br />
-
-   <div class="ac-container" style="position:absolute;">
-      <ul class="ac-menu">
-      <li ng-repeat="result in results"
-      ng-if="$index > 0"
-      class="ac-menu-item"
-      ng-class="$index == selected_index ? 'ac-state-focus' : ''">
-      <a href ng-click="apply_selection($index, $event)" ng-bind-html=result.label> </a>
-    </li>
-  </ul>
-</div>
     </div>
   </div>
 </div>
@@ -57,7 +45,7 @@
 
   <div class="panel-body">
   <div class="row"> 
-  <div class="col-sm-12 col-xs-12" style="background-color:#C3E7F0"><img src="{{user.profilePic}}" width="50px" height="50px">&nbsp; {{user.fullname}}&nbsp;|&nbsp; &nbsp; &nbsp; <a href="/logout">Logout</a>&nbsp;&nbsp; <a href=""></a></div>
+  <div class="col-sm-12 col-xs-12" style="background-color:#C3E7F0"><img src="{{user.profilePic}}" width="50px" height="50px">&nbsp; {{user.fullname}}&nbsp;|&nbsp; &nbsp; &nbsp; <a ng-click="logout()">Logout</a>&nbsp;&nbsp; <a href=""></a></div>
 
   <div class="auto">
       <div mass-autocomplete >
